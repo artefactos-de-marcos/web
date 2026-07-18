@@ -613,8 +613,7 @@ body::before {
 </header>
 
 <div class="table" id="table">
-  <article class="card card-red card-inmersion" data-app="inmersion" data-title="Inmersión" data-url="https://artefactosdemarcos.com/inmersion" data-color="#c8312b" tabindex="0" role="button" aria-label="Inmersión, imágenes 360 enriquecidas">
-    <div class="card-inner">
+  <article class="card card-red card-inmersion" data-app="inmersion" data-title="Innmersión" data-url="https://artefactos-de-marcos.github.io/visor_360/" data-color="#c8312b" tabindex="0" role="button" aria-label="Innmersión, imágenes 360 enriquecidas">
       <div class="sticker" contenteditable="false"></div>
       <div class="card-tag">Disponible</div>
       <div class="card-body">
@@ -832,7 +831,23 @@ function setCardPos(card, x, y, rot) {
 cards.forEach(card => {
   card.addEventListener('pointerdown', onPointerDown);
   card.addEventListener('keydown', onCardKeyDown);
-  
+  // Evento para abrir la app con doble clic
+  card.addEventListener('dblclick', () => {
+    // Si hay una carta seleccionada, la deseleccionamos para que no estorbe
+    if (selectedCard) {
+      selectedCard.classList.remove('selected');
+      selectedCard = null;
+      updateShareBar();
+    }
+    
+    const url = card.dataset.url;
+    if (url) {
+      showToast('Abriendo Innmersión...');
+      window.open(url, '_blank'); // Abre en una pestaña nueva
+    } else {
+      showToast('Próximamente');
+    }
+  });
   // Sticker Listeners
   const sticker = card.querySelector('.sticker');
   sticker.addEventListener('pointerdown', e => e.stopPropagation());
