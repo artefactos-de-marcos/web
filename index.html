@@ -1,3 +1,12 @@
+El problema con el doble clic es que el sistema de arrastre de las tarjetas (que usa `pointerdown` y `pointerup`) intercepta los clics, haciendo muy difícil que el navegador registre un "doble clic" limpio sin que se active el arrastre o la selección.
+
+La mejor forma de resolver esto en interfaces donde los elementos son "agarrables" es **añadir un botón explícito dentro de la tarjeta**. Es más intuitivo, accesible y no interfiere con la física de la mesa.
+
+He reemplazado el intento de doble clic por un botón "Abrir" que aparece en la esquina inferior derecha de la tarjeta de Innmersión. Ya dejé la URL real (`https://artefactos-de-marcos.github.io/visor_360/`) configurada en el código. 
+
+Simplemente reemplazá el contenido de tu archivo `index.html` por este código completo y subilo a GitHub:
+
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -187,7 +196,6 @@ body::before {
     0 16px 32px rgba(0,0,0,0.20),
     0 30px 60px rgba(0,0,0,0.25),
     inset 0 0 0 1px rgba(255,255,255,0.08) !important;
-  /* La carta se endereza al agarrarla */
   transform: scale(1.05) rotate(0deg) !important; 
 }
 
@@ -243,7 +251,7 @@ body::before {
   justify-content: flex-end;
 }
 
-/* Carta Inmersión */
+/* Carta Innmersión */
 .card-inmersion .card-body {
   align-items: stretch;
 }
@@ -284,6 +292,31 @@ body::before {
   line-height: 1.35;
   letter-spacing: 0.01em;
 }
+
+/* Botón Abrir App */
+.open-app-btn {
+  position: absolute;
+  bottom: 22px;
+  right: 22px;
+  background: var(--cream);
+  color: var(--red);
+  border: none;
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 15;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  transition: transform 0.15s;
+}
+
+.open-app-btn:hover { transform: scale(1.05); }
+.open-app-btn svg { width: 12px; height: 12px; }
 
 /* Cartas Próximamente */
 .card-soon .card-body {
@@ -581,6 +614,7 @@ body::before {
   .soon-icon { width: 24px; height: 24px; }
   .logo-frame { padding: 10px; margin-bottom: 10px; border-radius: 9px; }
   .sticker { top: 10px; right: 10px; font-size: 10px; padding: 4px 8px; }
+  .open-app-btn { bottom: 16px; right: 16px; padding: 5px 10px; font-size: 10px; }
 }
 </style>
 </head>
@@ -614,17 +648,24 @@ body::before {
 
 <div class="table" id="table">
   <article class="card card-red card-inmersion" data-app="inmersion" data-title="Innmersión" data-url="https://artefactos-de-marcos.github.io/visor_360/" data-color="#c8312b" tabindex="0" role="button" aria-label="Innmersión, imágenes 360 enriquecidas">
+    <div class="card-inner">
       <div class="sticker" contenteditable="false"></div>
       <div class="card-tag">Disponible</div>
       <div class="card-body">
         <div class="logo-frame">
-          <img src="https://z-cdn-media.chatglm.cn/files/f82268e9-20f1-4d8e-bf3d-425e827cb818.png?auth_key=1884366257-20f796ad76384208ac852711dd26fe46-0-1bee5ca6c73a6931beb1afce57081f37" alt="Logo Inmersión">
+          <img src="https://z-cdn-media.chatglm.cn/files/f82268e9-20f1-4d8e-bf3d-425e827cb818.png?auth_key=1884366257-20f796ad76384208ac852711dd26fe46-0-1bee5ca6c73a6931beb1afce57081f37" alt="Logo Innmersión">
         </div>
         <div>
-          <div class="card-title">Inmersión</div>
+          <div class="card-title">Innmersión</div>
           <div class="card-subtitle">Imágenes 360° enriquecidas</div>
         </div>
       </div>
+      <button class="open-app-btn" aria-label="Abrir aplicación Innmersión">
+        Abrir
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7 17l9.2-9.2M17 17V7H7"></path>
+        </svg>
+      </button>
     </div>
   </article>
 
@@ -758,7 +799,7 @@ function layoutCards() {
   const h = table.clientHeight;
   const isMobile = window.innerWidth < 600;
   
-  const safeTop = isMobile ? 160 : 180; // Espacio para los botones
+  const safeTop = isMobile ? 160 : 180; 
   const safeBottom = isMobile ? 100 : 120;
   const safeH = h - safeTop - safeBottom;
   const centerY = safeTop + safeH / 2 - (cardH / 2);
@@ -831,23 +872,7 @@ function setCardPos(card, x, y, rot) {
 cards.forEach(card => {
   card.addEventListener('pointerdown', onPointerDown);
   card.addEventListener('keydown', onCardKeyDown);
-  // Evento para abrir la app con doble clic
-  card.addEventListener('dblclick', () => {
-    // Si hay una carta seleccionada, la deseleccionamos para que no estorbe
-    if (selectedCard) {
-      selectedCard.classList.remove('selected');
-      selectedCard = null;
-      updateShareBar();
-    }
-    
-    const url = card.dataset.url;
-    if (url) {
-      showToast('Abriendo Innmersión...');
-      window.open(url, '_blank'); // Abre en una pestaña nueva
-    } else {
-      showToast('Próximamente');
-    }
-  });
+  
   // Sticker Listeners
   const sticker = card.querySelector('.sticker');
   sticker.addEventListener('pointerdown', e => e.stopPropagation());
@@ -866,6 +891,20 @@ cards.forEach(card => {
       sticker.blur();
     }
   });
+
+  // Open App Button Listener
+  const openBtn = card.querySelector('.open-app-btn');
+  if (openBtn) {
+    openBtn.addEventListener('pointerdown', e => e.stopPropagation());
+    openBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const url = card.dataset.url;
+      if (url) {
+        showToast('Abriendo Innmersión...');
+        window.open(url, '_blank');
+      }
+    });
+  }
 });
 
 function makeEditable(el) {
@@ -894,7 +933,6 @@ function onPointerDown(e) {
   dragging = card;
   draggingGroup = getStackGroup(card);
   
-  // Traer el grupo entero al frente, manteniendo su orden relativo
   const minZ = Math.min(...draggingGroup.map(c => parseInt(c.style.zIndex) || 0));
   topZ += draggingGroup.length;
   draggingGroup.forEach(c => {
@@ -902,7 +940,6 @@ function onPointerDown(e) {
     c.style.zIndex = topZ - (draggingGroup.length - 1) + offset;
     c.classList.add('dragging');
     
-    // Guardar posiciones iniciales para mover todas juntas
     c.dataset.startX = c.dataset.x;
     c.dataset.startY = c.dataset.y;
     c.dataset.origRot = c.dataset.rot;
@@ -932,14 +969,12 @@ function onPointerMove(e) {
   
   const tableRect = table.getBoundingClientRect();
   
-  // Calcular movimiento del líder con límites de pantalla
   let draggedNewX = parseFloat(dragging.dataset.startX) + dx;
   let draggedNewY = parseFloat(dragging.dataset.startY) + dy;
   
   draggedNewX = Math.max(-cardW * 0.25, Math.min(tableRect.width - cardW * 0.75, draggedNewX));
   draggedNewY = Math.max(0, Math.min(tableRect.height - cardH * 0.85, draggedNewY));
   
-  // Aplicar el delta permitido a todo el grupo
   const allowedDx = draggedNewX - parseFloat(dragging.dataset.startX);
   const allowedDy = draggedNewY - parseFloat(dragging.dataset.startY);
   
@@ -965,7 +1000,6 @@ function onPointerUp(e) {
   
   if (!hasMoved) {
     toggleSelection(card);
-    // Restaurar posiciones y rotaciones originales si solo fue un click
     draggingGroup.forEach(c => {
       setCardPos(c, parseFloat(c.dataset.startX), parseFloat(c.dataset.startY), parseFloat(c.dataset.origRot));
     });
@@ -984,16 +1018,15 @@ function onPointerUp(e) {
       draggingGroup.forEach(c => {
         const newX = parseFloat(c.dataset.x) + moveX;
         const newY = parseFloat(c.dataset.y) + moveY;
-        const rot = (Math.random() - 0.5) * STACK_ROT_VARIANCE * 2; // Rotación casi recta
+        const rot = (Math.random() - 0.5) * STACK_ROT_VARIANCE * 2; 
         setCardPos(c, newX, newY, rot);
       });
       showToast(`Apilado sobre «${target.dataset.title}»`);
     } else {
-      // Soltar en el lugar, derechitas
       draggingGroup.forEach(c => {
         const x = parseFloat(c.dataset.x);
         const y = parseFloat(c.dataset.y);
-        const rot = (Math.random() - 0.5) * STACK_ROT_VARIANCE; // Recta con micro-inclinación
+        const rot = (Math.random() - 0.5) * STACK_ROT_VARIANCE; 
         setCardPos(c, x, y, rot);
       });
     }
@@ -1012,7 +1045,7 @@ function findStackTarget(card) {
   let bestOverlap = 0;
   
   cards.forEach(other => {
-    if (draggingGroup.includes(other)) return; // Ignorar las que estamos moviendo
+    if (draggingGroup.includes(other)) return; 
     
     const ox = parseFloat(other.dataset.x);
     const oy = parseFloat(other.dataset.y);
@@ -1304,3 +1337,4 @@ document.addEventListener('keydown', e => {
 </script>
 </body>
 </html>
+```
