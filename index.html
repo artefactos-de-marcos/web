@@ -82,7 +82,16 @@ body::before {
   margin-top: 8px;
 }
 
-.subscribe-btn {
+.header-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* Estilo unificado para los botones */
+.action-btn {
   background: var(--ink);
   color: var(--cream);
   border: none;
@@ -93,28 +102,21 @@ body::before {
   letter-spacing: 0.02em;
   cursor: pointer;
   border-radius: 999px;
-  transition: background 0.2s, transform 0.15s;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: 12px;
+  transition: background 0.2s, transform 0.15s;
 }
 
-.subscribe-btn::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--amber);
-  display: inline-block;
-}
+.action-btn svg { width: 14px; height: 14px; }
 
-.subscribe-btn:hover { background: var(--red); transform: translateY(-1px); }
+.action-btn:hover { background: var(--red); transform: translateY(-1px); }
 
 @media (max-width: 600px) {
   .brand-title { font-size: 32px; }
   .brand-subtitle { font-size: 10px; letter-spacing: 0.12em; margin-top: 6px; }
-  .subscribe-btn { padding: 9px 14px; font-size: 12px; margin-top: 8px; }
+  .action-btn { padding: 8px 14px; font-size: 11px; }
+  .header-actions { gap: 6px; margin-top: 8px; }
   .header { padding: 14px 16px; }
 }
 
@@ -135,17 +137,15 @@ body::before {
   user-select: none;
   -webkit-user-select: none;
   touch-action: none;
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  transition: box-shadow 0.25s ease, transform 0.2s ease;
   box-shadow: 
     0 1px 1px rgba(0,0,0,0.06),
     0 4px 8px rgba(0,0,0,0.08),
     0 12px 24px rgba(0,0,0,0.10),
     inset 0 0 0 1px rgba(255,255,255,0.06);
-  display: flex;
-  flex-direction: column;
-  padding: 22px;
   overflow: hidden;
   will-change: transform;
+  transform: rotate(var(--rot, 0deg));
 }
 
 .card::after {
@@ -158,11 +158,19 @@ body::before {
   mix-blend-mode: overlay;
 }
 
-.card > * { position: relative; z-index: 1; }
+.card-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 22px;
+  position: relative;
+  z-index: 1;
+}
 
 @media (hover: hover) {
   .card:not(.dragging):hover {
-    transform: translateY(-3px) rotate(var(--rot, 0deg)) !important;
+    transform: translateY(-4px) rotate(var(--rot, 0deg));
     box-shadow: 
       0 2px 2px rgba(0,0,0,0.08),
       0 8px 16px rgba(0,0,0,0.12),
@@ -179,7 +187,8 @@ body::before {
     0 16px 32px rgba(0,0,0,0.20),
     0 30px 60px rgba(0,0,0,0.25),
     inset 0 0 0 1px rgba(255,255,255,0.08) !important;
-  transform: scale(1.05) rotate(0deg) !important;
+  /* La carta se endereza al agarrarla */
+  transform: scale(1.05) rotate(0deg) !important; 
 }
 
 .card.selected {
@@ -194,6 +203,8 @@ body::before {
 
 .card.dragging.selected {
   box-shadow: 
+    0 0 0 3px var(--cream),
+    0 0 0 6px var(--ink),
     0 4px 8px rgba(0,0,0,0.15),
     0 16px 32px rgba(0,0,0,0.20),
     0 30px 60px rgba(0,0,0,0.25),
@@ -232,7 +243,7 @@ body::before {
   justify-content: flex-end;
 }
 
-/* Carta Innmersión */
+/* Carta Inmersión */
 .card-inmersion .card-body {
   align-items: stretch;
 }
@@ -297,6 +308,43 @@ body::before {
   align-self: flex-end;
 }
 
+/* Etiqueta Sticker */
+.sticker {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #ffeb99;
+  color: var(--ink);
+  padding: 6px 10px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'Space Grotesk', sans-serif;
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.2);
+  transform: rotate(4deg);
+  cursor: text;
+  max-width: 120px;
+  min-width: 60px;
+  min-height: 24px;
+  z-index: 10;
+  display: none;
+  outline: none;
+  word-break: break-word;
+}
+
+.sticker.show { display: block; }
+.sticker:empty::before {
+  content: 'Etiquetar';
+  opacity: 0.5;
+  font-weight: 400;
+  font-style: italic;
+}
+.sticker.editable { 
+  background: #fff3b0; 
+  box-shadow: 0 0 0 2px var(--ink), 1px 2px 4px rgba(0,0,0,0.2); 
+  cursor: text;
+}
+
 /* Barra de compartir */
 .share-bar {
   position: fixed;
@@ -334,7 +382,7 @@ body::before {
   opacity: 0.85;
   margin-right: 8px;
   white-space: nowrap;
-  max-width: 140px;
+  max-width: 160px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -363,7 +411,7 @@ body::before {
 
 @media (max-width: 600px) {
   .share-bar { padding: 6px 8px 6px 12px; bottom: 16px; }
-  .share-label { font-size: 11px; max-width: 90px; }
+  .share-label { font-size: 11px; max-width: 100px; }
   .share-btn { width: 32px; height: 32px; }
   .share-btn svg { width: 15px; height: 15px; }
 }
@@ -524,13 +572,15 @@ body::before {
     --card-w: 158px;
     --card-h: 218px;
   }
-  .card { padding: 16px; border-radius: 14px; }
+  .card-inner { padding: 16px; }
+  .card { border-radius: 14px; }
   .card-title { font-size: 17px; }
   .card-subtitle { font-size: 10px; }
   .card-tag { font-size: 10px; }
   .soon-title { font-size: 20px; margin: 0 0 12px 0; }
   .soon-icon { width: 24px; height: 24px; }
   .logo-frame { padding: 10px; margin-bottom: 10px; border-radius: 9px; }
+  .sticker { top: 10px; right: 10px; font-size: 10px; padding: 4px 8px; }
 }
 </style>
 </head>
@@ -541,54 +591,82 @@ body::before {
     <h1 class="brand-title">Artefactos de Marcos</h1>
     <div class="brand-subtitle">Cosas digitales</div>
   </div>
-  <button class="subscribe-btn" id="subscribeBtn" aria-label="Suscribirse">
-    Suscribirse
-  </button>
+  <div class="header-actions">
+    <button class="action-btn" id="subscribeBtn" aria-label="Suscribirse">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+        <polyline points="22,6 12,13 2,6"></polyline>
+      </svg>
+      Suscribirse
+    </button>
+    <button class="action-btn" id="shuffleBtn" aria-label="Mezclar cartas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M16 3h5v5"></path>
+        <path d="M4 20L21 3"></path>
+        <path d="M21 16v5h-5"></path>
+        <path d="M15 15l6 6"></path>
+        <path d="M4 4l5 5"></path>
+      </svg>
+      Mezclar
+    </button>
+  </div>
 </header>
 
 <div class="table" id="table">
   <article class="card card-red card-inmersion" data-app="inmersion" data-title="Innmersión" data-url="https://artefactosdemarcos.com/inmersion" data-color="#c8312b" tabindex="0" role="button" aria-label="Innmersión, imágenes 360 enriquecidas">
-    <div class="card-tag">Disponible</div>
-    <div class="card-body">
-      <div class="logo-frame">
-        <img src="https://z-cdn-media.chatglm.cn/files/f82268e9-20f1-4d8e-bf3d-425e827cb818.png?auth_key=1884366257-20f796ad76384208ac852711dd26fe46-0-1bee5ca6c73a6931beb1afce57081f37" alt="Logo Innmersión">
-      </div>
-      <div>
-        <div class="card-title">Innmersión</div>
-        <div class="card-subtitle">Imágenes 360° enriquecidas</div>
+    <div class="card-inner">
+      <div class="sticker" contenteditable="false"></div>
+      <div class="card-tag">Disponible</div>
+      <div class="card-body">
+        <div class="logo-frame">
+          <img src="https://z-cdn-media.chatglm.cn/files/f82268e9-20f1-4d8e-bf3d-425e827cb818.png?auth_key=1884366257-20f796ad76384208ac852711dd26fe46-0-1bee5ca6c73a6931beb1afce57081f37" alt="Logo Innmersión">
+        </div>
+        <div>
+          <div class="card-title">Innmersión</div>
+          <div class="card-subtitle">Imágenes 360° enriquecidas</div>
+        </div>
       </div>
     </div>
   </article>
 
   <article class="card card-amber card-soon" data-app="prox-1" data-title="Próximamente" data-url="" data-color="#e8a317" tabindex="0" role="button" aria-label="Próximamente, artefacto número uno">
-    <div class="card-tag">En preparación</div>
-    <div class="card-body">
-      <div class="soon-title">Próximamente</div>
-      <svg class="soon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="9"/>
-        <path d="M12 7v5l3 2"/>
-      </svg>
+    <div class="card-inner">
+      <div class="sticker" contenteditable="false"></div>
+      <div class="card-tag">En preparación</div>
+      <div class="card-body">
+        <div class="soon-title">Próximamente</div>
+        <svg class="soon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 7v5l3 2"/>
+        </svg>
+      </div>
     </div>
   </article>
 
   <article class="card card-teal card-soon" data-app="prox-2" data-title="Próximamente" data-url="" data-color="#2d8b8b" tabindex="0" role="button" aria-label="Próximamente, artefacto número dos">
-    <div class="card-tag">En preparación</div>
-    <div class="card-body">
-      <div class="soon-title">Próximamente</div>
-      <svg class="soon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 12c0 1-4 7-9 7s-9-6-9-7 4-7 9-7 9 6 9 7z"/>
-        <circle cx="12" cy="12" r="3"/>
-      </svg>
+    <div class="card-inner">
+      <div class="sticker" contenteditable="false"></div>
+      <div class="card-tag">En preparación</div>
+      <div class="card-body">
+        <div class="soon-title">Próximamente</div>
+        <svg class="soon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12c0 1-4 7-9 7s-9-6-9-7 4-7 9-7 9 6 9 7z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+      </div>
     </div>
   </article>
 
   <article class="card card-navy card-soon" data-app="prox-3" data-title="Próximamente" data-url="" data-color="#1e3a5f" tabindex="0" role="button" aria-label="Próximamente, artefacto número tres">
-    <div class="card-tag">En preparación</div>
-    <div class="card-body">
-      <div class="soon-title">Próximamente</div>
-      <svg class="soon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.4-6.3-4.6L5.7 21.2 8 13.8 2 9.4h7.6z"/>
-      </svg>
+    <div class="card-inner">
+      <div class="sticker" contenteditable="false"></div>
+      <div class="card-tag">En preparación</div>
+      <div class="card-body">
+        <div class="soon-title">Próximamente</div>
+        <svg class="soon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.4-6.3-4.6L5.7 21.2 8 13.8 2 9.4h7.6z"/>
+        </svg>
+      </div>
     </div>
   </article>
 </div>
@@ -656,6 +734,7 @@ const cards = Array.from(document.querySelectorAll('.card'));
 
 let topZ = 10;
 let dragging = null;
+let draggingGroup = [];
 let dragOffset = { x: 0, y: 0 };
 let startPos = { x: 0, y: 0 };
 let hasMoved = false;
@@ -663,6 +742,10 @@ let selectedCard = null;
 let cardW = 220, cardH = 300;
 const STACK_OFFSET = 22;
 const STACK_ROT_VARIANCE = 4;
+
+function getRandomRotation() {
+  return Math.random() * 360 - 180;
+}
 
 function readCardSize() {
   const rect = cards[0].getBoundingClientRect();
@@ -676,25 +759,64 @@ function layoutCards() {
   const h = table.clientHeight;
   const isMobile = window.innerWidth < 600;
   
-  const positions = isMobile ? [
-    { x: 0.08, y: 0.20, rot: -5 },
-    { x: 0.58, y: 0.16, rot: 4 },
-    { x: 0.10, y: 0.58, rot: 3 },
-    { x: 0.60, y: 0.60, rot: -3 },
+  const safeTop = isMobile ? 160 : 180; // Espacio para los botones
+  const safeBottom = isMobile ? 100 : 120;
+  const safeH = h - safeTop - safeBottom;
+  const centerY = safeTop + safeH / 2 - (cardH / 2);
+  const centerX = w / 2 - (cardW / 2);
+  
+  const offsets = isMobile ? [
+    { dx: -cardW*0.6, dy: -cardH*0.6 },
+    { dx: cardW*0.6, dy: -cardH*0.7 },
+    { dx: -cardW*0.7, dy: cardH*0.3 },
+    { dx: cardW*0.7, dy: cardH*0.4 },
   ] : [
-    { x: 0.08, y: 0.18, rot: -4 },
-    { x: 0.58, y: 0.12, rot: 3 },
-    { x: 0.18, y: 0.50, rot: 2 },
-    { x: 0.65, y: 0.48, rot: -2 },
+    { dx: -cardW*1.1, dy: -cardH*0.6 },
+    { dx: cardW*0.4, dy: -cardH*0.8 },
+    { dx: -cardW*0.8, dy: cardH*0.3 },
+    { dx: cardW*0.9, dy: cardH*0.5 },
   ];
   
   cards.forEach((card, i) => {
-    const p = positions[i];
-    const x = p.x * (w - cardW);
-    const y = p.y * (h - cardH);
-    setCardPos(card, x, y, p.rot);
+    const p = offsets[i];
+    const x = centerX + p.dx;
+    const y = centerY + p.dy;
+    const rot = getRandomRotation();
+    setCardPos(card, x, y, rot);
     card.style.zIndex = 10 + i;
   });
+}
+
+function shuffleCards() {
+  const w = table.clientWidth;
+  const h = table.clientHeight;
+  const isMobile = window.innerWidth < 600;
+  const safeTop = isMobile ? 160 : 180;
+  const safeBottom = isMobile ? 90 : 100;
+  const safeSide = 20;
+  
+  cards.forEach((card, i) => {
+    const x = safeSide + Math.random() * (w - cardW - safeSide * 2);
+    const y = safeTop + Math.random() * (h - cardH - safeTop - safeBottom);
+    const rot = getRandomRotation();
+    
+    setCardPos(card, x, y, rot);
+    card.style.zIndex = 10 + Math.floor(Math.random() * 10);
+  });
+  
+  if (selectedCard) {
+    selectedCard.classList.remove('selected');
+    selectedCard = null;
+    updateShareBar();
+  }
+  
+  cards.forEach(card => {
+    const sticker = card.querySelector('.sticker');
+    sticker.classList.remove('show', 'editable');
+    sticker.contentEditable = false;
+  });
+  
+  showToast('Cartas mezcladas');
 }
 
 function setCardPos(card, x, y, rot) {
@@ -710,7 +832,37 @@ function setCardPos(card, x, y, rot) {
 cards.forEach(card => {
   card.addEventListener('pointerdown', onPointerDown);
   card.addEventListener('keydown', onCardKeyDown);
+  
+  // Sticker Listeners
+  const sticker = card.querySelector('.sticker');
+  sticker.addEventListener('pointerdown', e => e.stopPropagation());
+  sticker.addEventListener('click', e => {
+    e.stopPropagation();
+    makeEditable(sticker);
+  });
+  sticker.addEventListener('blur', () => {
+    sticker.contentEditable = false;
+    sticker.classList.remove('editable');
+    saveSticker(card.dataset.app, sticker.innerText);
+  });
+  sticker.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      sticker.blur();
+    }
+  });
 });
+
+function makeEditable(el) {
+  el.contentEditable = true;
+  el.classList.add('editable');
+  el.focus();
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
 
 function onCardKeyDown(e) {
   if (e.key === 'Enter' || e.key === ' ') {
@@ -725,16 +877,28 @@ function onPointerDown(e) {
   e.preventDefault();
   
   dragging = card;
+  draggingGroup = getStackGroup(card);
+  
+  // Traer el grupo entero al frente, manteniendo su orden relativo
+  const minZ = Math.min(...draggingGroup.map(c => parseInt(c.style.zIndex) || 0));
+  topZ += draggingGroup.length;
+  draggingGroup.forEach(c => {
+    const offset = (parseInt(c.style.zIndex) || 0) - minZ;
+    c.style.zIndex = topZ - (draggingGroup.length - 1) + offset;
+    c.classList.add('dragging');
+    
+    // Guardar posiciones iniciales para mover todas juntas
+    c.dataset.startX = c.dataset.x;
+    c.dataset.startY = c.dataset.y;
+    c.dataset.origRot = c.dataset.rot;
+  });
+
   hasMoved = false;
   startPos = { x: e.clientX, y: e.clientY };
   
   const rect = card.getBoundingClientRect();
   dragOffset.x = e.clientX - rect.left;
   dragOffset.y = e.clientY - rect.top;
-  
-  topZ++;
-  card.style.zIndex = topZ;
-  card.classList.add('dragging');
   
   try { card.setPointerCapture(e.pointerId); } catch(_) {}
   card.addEventListener('pointermove', onPointerMove);
@@ -752,46 +916,77 @@ function onPointerMove(e) {
   if (Math.abs(dx) > 4 || Math.abs(dy) > 4) hasMoved = true;
   
   const tableRect = table.getBoundingClientRect();
-  let x = e.clientX - tableRect.left - dragOffset.x;
-  let y = e.clientY - tableRect.top - dragOffset.y;
   
-  x = Math.max(-cardW * 0.25, Math.min(tableRect.width - cardW * 0.75, x));
-  y = Math.max(0, Math.min(tableRect.height - cardH * 0.85, y));
+  // Calcular movimiento del líder con límites de pantalla
+  let draggedNewX = parseFloat(dragging.dataset.startX) + dx;
+  let draggedNewY = parseFloat(dragging.dataset.startY) + dy;
   
-  dragging.style.left = x + 'px';
-  dragging.style.top = y + 'px';
-  dragging.dataset.x = x;
-  dragging.dataset.y = y;
+  draggedNewX = Math.max(-cardW * 0.25, Math.min(tableRect.width - cardW * 0.75, draggedNewX));
+  draggedNewY = Math.max(0, Math.min(tableRect.height - cardH * 0.85, draggedNewY));
+  
+  // Aplicar el delta permitido a todo el grupo
+  const allowedDx = draggedNewX - parseFloat(dragging.dataset.startX);
+  const allowedDy = draggedNewY - parseFloat(dragging.dataset.startY);
+  
+  draggingGroup.forEach(c => {
+    const x = parseFloat(c.dataset.startX) + allowedDx;
+    const y = parseFloat(c.dataset.startY) + allowedDy;
+    c.style.left = x + 'px';
+    c.style.top = y + 'px';
+    c.dataset.x = x;
+    c.dataset.y = y;
+  });
 }
 
 function onPointerUp(e) {
   if (!dragging) return;
   
   const card = dragging;
-  card.classList.remove('dragging');
+  
+  draggingGroup.forEach(c => c.classList.remove('dragging'));
   card.removeEventListener('pointermove', onPointerMove);
   card.removeEventListener('pointerup', onPointerUp);
   card.removeEventListener('pointercancel', onPointerUp);
   
   if (!hasMoved) {
     toggleSelection(card);
-    const rot = parseFloat(card.dataset.rot);
-    card.style.transform = `rotate(${rot}deg)`;
+    // Restaurar posiciones y rotaciones originales si solo fue un click
+    draggingGroup.forEach(c => {
+      setCardPos(c, parseFloat(c.dataset.startX), parseFloat(c.dataset.startY), parseFloat(c.dataset.origRot));
+    });
   } else {
     const target = findStackTarget(card);
     if (target) {
       const tx = parseFloat(target.dataset.x);
       const ty = parseFloat(target.dataset.y);
-      const rot = (Math.random() - 0.5) * STACK_ROT_VARIANCE * 2;
-      setCardPos(card, tx + STACK_OFFSET, ty + STACK_OFFSET, rot);
+      
+      const dragCardX = parseFloat(card.dataset.x);
+      const dragCardY = parseFloat(card.dataset.y);
+      
+      const moveX = (tx + STACK_OFFSET) - dragCardX;
+      const moveY = (ty + STACK_OFFSET) - dragCardY;
+      
+      draggingGroup.forEach(c => {
+        const newX = parseFloat(c.dataset.x) + moveX;
+        const newY = parseFloat(c.dataset.y) + moveY;
+        const rot = (Math.random() - 0.5) * STACK_ROT_VARIANCE * 2; // Rotación casi recta
+        setCardPos(c, newX, newY, rot);
+      });
       showToast(`Apilado sobre «${target.dataset.title}»`);
     } else {
-      const rot = parseFloat(card.dataset.rot);
-      card.style.transform = `rotate(${rot}deg)`;
+      // Soltar en el lugar, derechitas
+      draggingGroup.forEach(c => {
+        const x = parseFloat(c.dataset.x);
+        const y = parseFloat(c.dataset.y);
+        const rot = (Math.random() - 0.5) * STACK_ROT_VARIANCE; // Recta con micro-inclinación
+        setCardPos(c, x, y, rot);
+      });
     }
   }
   
+  updateStackUI();
   dragging = null;
+  draggingGroup = [];
 }
 
 function findStackTarget(card) {
@@ -802,7 +997,8 @@ function findStackTarget(card) {
   let bestOverlap = 0;
   
   cards.forEach(other => {
-    if (other === card) return;
+    if (draggingGroup.includes(other)) return; // Ignorar las que estamos moviendo
+    
     const ox = parseFloat(other.dataset.x);
     const oy = parseFloat(other.dataset.y);
     
@@ -821,6 +1017,48 @@ function findStackTarget(card) {
   return best;
 }
 
+function getStackGroup(card) {
+  const cx = parseFloat(card.dataset.x);
+  const cy = parseFloat(card.dataset.y);
+  const group = [card];
+  
+  cards.forEach(other => {
+    if (other === card) return;
+    const ox = parseFloat(other.dataset.x);
+    const oy = parseFloat(other.dataset.y);
+    
+    const overlapX = Math.max(0, Math.min(cx + cardW, ox + cardW) - Math.max(cx, ox));
+    const overlapY = Math.max(0, Math.min(cy + cardH, oy + cardH) - Math.max(cy, oy));
+    const overlapArea = overlapX * overlapY;
+    
+    if (overlapArea > 0.55 * cardW * cardH) {
+      group.push(other);
+    }
+  });
+  
+  return group;
+}
+
+function updateStackUI() {
+  cards.forEach(card => {
+    const sticker = card.querySelector('.sticker');
+    const group = getStackGroup(card);
+    
+    let topCard = card;
+    group.forEach(c => {
+      if (parseInt(c.style.zIndex) > parseInt(topCard.style.zIndex)) {
+        topCard = c;
+      }
+    });
+    
+    if (group.length > 1 && card === topCard) {
+      sticker.classList.add('show');
+    } else {
+      sticker.classList.remove('show');
+    }
+  });
+}
+
 function toggleSelection(card) {
   if (selectedCard === card) {
     card.classList.remove('selected');
@@ -836,9 +1074,14 @@ function toggleSelection(card) {
 function updateShareBar() {
   const label = document.getElementById('shareLabel');
   const indicator = document.getElementById('shareIndicator');
+  
   if (selectedCard) {
-    const title = selectedCard.dataset.title;
-    label.textContent = `Compartir «${title}»`;
+    const group = getStackGroup(selectedCard);
+    if (group.length > 1) {
+      label.textContent = `Compartir pila (${group.length} ítems)`;
+    } else {
+      label.textContent = `Compartir «${selectedCard.dataset.title}»`;
+    }
     indicator.style.background = selectedCard.dataset.color;
     indicator.classList.add('active');
   } else {
@@ -863,12 +1106,39 @@ const SITE_NAME = 'Artefactos de Marcos';
 
 function getShareData() {
   if (selectedCard) {
-    const subtitle = selectedCard.querySelector('.card-subtitle')?.textContent || '';
-    return {
-      title: selectedCard.dataset.title,
-      url: selectedCard.dataset.url || SITE_URL,
-      subtitle: subtitle
-    };
+    const group = getStackGroup(selectedCard);
+    
+    if (group.length > 1) {
+      let topCard = selectedCard;
+      group.forEach(c => {
+        if (parseInt(c.style.zIndex) > parseInt(topCard.style.zIndex)) {
+          topCard = c;
+        }
+      });
+      
+      const groupSorted = group.sort((a,b) => parseInt(a.style.zIndex) - parseInt(b.style.zIndex));
+      const titles = groupSorted.map(c => c.dataset.title);
+      const urls = groupSorted.map(c => c.dataset.url).filter(u => u);
+      
+      const stickerText = topCard.querySelector('.sticker').innerText.trim();
+      const titleStr = stickerText ? `Pila: ${stickerText}` : 'Pila de artefactos';
+      
+      const urlStr = urls.length > 0 ? urls.join('\n') : SITE_URL;
+      const subtitleStr = titles.join(' + ');
+      
+      return {
+        title: titleStr,
+        url: urlStr,
+        subtitle: subtitleStr
+      };
+    } else {
+      const subtitle = selectedCard.querySelector('.card-subtitle')?.textContent || '';
+      return {
+        title: selectedCard.dataset.title,
+        url: selectedCard.dataset.url || SITE_URL,
+        subtitle: subtitle
+      };
+    }
   }
   return {
     title: SITE_NAME,
@@ -883,20 +1153,20 @@ document.querySelectorAll('.share-btn').forEach(btn => {
     const data = getShareData();
     const text = data.title === SITE_NAME 
       ? `${SITE_NAME} — ${data.subtitle}` 
-      : `${data.title} — ${data.subtitle} (${SITE_NAME})`;
+      : `${data.title}\n${data.subtitle}\n${data.url}`;
     
     let url = '';
     switch (type) {
       case 'mail':
-        url = `mailto:?subject=${encodeURIComponent(data.title + ' — ' + SITE_NAME)}&body=${encodeURIComponent(text + '\n\n' + data.url)}`;
+        url = `mailto:?subject=${encodeURIComponent(data.title + ' — ' + SITE_NAME)}&body=${encodeURIComponent(text)}`;
         window.location.href = url;
         break;
       case 'whatsapp':
-        url = `https://wa.me/?text=${encodeURIComponent(text + ' ' + data.url)}`;
+        url = `https://wa.me/?text=${encodeURIComponent(text)}`;
         window.open(url, '_blank', 'noopener');
         break;
       case 'twitter':
-        url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(data.url)}`;
+        url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(data.title + ' ' + data.subtitle)}&url=${encodeURIComponent(data.url)}`;
         window.open(url, '_blank', 'noopener');
         break;
       case 'facebook':
@@ -904,7 +1174,7 @@ document.querySelectorAll('.share-btn').forEach(btn => {
         window.open(url, '_blank', 'noopener');
         break;
       case 'instagram':
-        navigator.clipboard?.writeText(data.url + ' ' + text).then(() => {
+        navigator.clipboard?.writeText(text).then(() => {
           showToast('Enlace copiado — pégalo en tu historia de Instagram');
         }).catch(() => {
           showToast('Copia el enlace: ' + data.url);
@@ -913,7 +1183,7 @@ document.querySelectorAll('.share-btn').forEach(btn => {
         setTimeout(() => btn.classList.remove('copied'), 1500);
         break;
       case 'copy':
-        navigator.clipboard?.writeText(data.url).then(() => {
+        navigator.clipboard?.writeText(text).then(() => {
           showToast('Enlace copiado al portapapeles');
         }).catch(() => {
           showToast('Enlace: ' + data.url);
@@ -925,6 +1195,24 @@ document.querySelectorAll('.share-btn').forEach(btn => {
   });
 });
 
+// --- Sticker Save/Load Logic ---
+function saveSticker(appId, text) {
+  const stickers = JSON.parse(localStorage.getItem('adm_stickers') || '{}');
+  stickers[appId] = text;
+  localStorage.setItem('adm_stickers', JSON.stringify(stickers));
+}
+
+function loadStickers() {
+  const stickers = JSON.parse(localStorage.getItem('adm_stickers') || '{}');
+  cards.forEach(card => {
+    const sticker = card.querySelector('.sticker');
+    if (stickers[card.dataset.app]) {
+      sticker.innerText = stickers[card.dataset.app];
+    }
+  });
+}
+
+// --- Subscribe Modal ---
 const subscribeBtn = document.getElementById('subscribeBtn');
 const subscribeModal = document.getElementById('subscribeModal');
 const subscribeForm = document.getElementById('subscribeForm');
@@ -947,6 +1235,9 @@ subscribeForm.addEventListener('submit', e => {
   subscribeForm.reset();
 });
 
+// --- Shuffle Button ---
+document.getElementById('shuffleBtn').addEventListener('click', shuffleCards);
+
 const toast = document.getElementById('toast');
 let toastTimer = null;
 function showToast(msg) {
@@ -956,7 +1247,10 @@ function showToast(msg) {
   toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
 }
 
+// --- Init ---
 layoutCards();
+loadStickers();
+updateStackUI();
 updateShareBar();
 
 setTimeout(() => {
@@ -977,6 +1271,7 @@ window.addEventListener('resize', () => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
     layoutCards();
+    updateStackUI();
   }, 200);
 });
 
