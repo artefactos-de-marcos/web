@@ -1,12 +1,3 @@
-El problema con el doble clic es que el sistema de arrastre de las tarjetas (que usa `pointerdown` y `pointerup`) intercepta los clics, haciendo muy difícil que el navegador registre un "doble clic" limpio sin que se active el arrastre o la selección.
-
-La mejor forma de resolver esto en interfaces donde los elementos son "agarrables" es **añadir un botón explícito dentro de la tarjeta**. Es más intuitivo, accesible y no interfiere con la física de la mesa.
-
-He reemplazado el intento de doble clic por un botón "Abrir" que aparece en la esquina inferior derecha de la tarjeta de Innmersión. Ya dejé la URL real (`https://artefactos-de-marcos.github.io/visor_360/`) configurada en el código. 
-
-Simplemente reemplazá el contenido de tu archivo `index.html` por este código completo y subilo a GitHub:
-
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -1337,4 +1328,3 @@ document.addEventListener('keydown', e => {
 </script>
 </body>
 </html>
-```
