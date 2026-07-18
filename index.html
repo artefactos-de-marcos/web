@@ -215,6 +215,13 @@ body::before {
 .card-teal { background: var(--teal); color: var(--cream); }
 .card-navy { background: var(--navy); color: var(--cream); }
 
+.card-top-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
 .card-tag {
   font-family: 'Fraunces', serif;
   font-style: italic;
@@ -242,7 +249,7 @@ body::before {
   justify-content: flex-end;
 }
 
-/* Carta Innmersión */
+/* Carta Inmersión */
 .card-inmersion .card-body {
   align-items: stretch;
 }
@@ -286,28 +293,48 @@ body::before {
 
 /* Botón Abrir App */
 .open-app-btn {
-  position: absolute;
-  bottom: 22px;
-  right: 22px;
   background: var(--cream);
   color: var(--red);
   border: none;
   border-radius: 999px;
-  padding: 7px 14px;
+  padding: 5px 12px;
   font-family: 'Space Grotesk', sans-serif;
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 6px;
-  z-index: 15;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  gap: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
   transition: transform 0.15s;
 }
 
 .open-app-btn:hover { transform: scale(1.05); }
-.open-app-btn svg { width: 12px; height: 12px; }
+.open-app-btn svg { width: 10px; height: 10px; }
+
+/* Botón Desapilar */
+.unstack-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--cream);
+  color: var(--ink);
+  border: none;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 11;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  transition: transform 0.15s, background 0.2s, color 0.2s;
+}
+
+.unstack-btn.show { display: flex; }
+.unstack-btn:hover { transform: scale(1.1); background: var(--red); color: var(--cream); }
+.unstack-btn svg { width: 14px; height: 14px; }
 
 /* Cartas Próximamente */
 .card-soon .card-body {
@@ -335,8 +362,8 @@ body::before {
 /* Etiqueta Sticker */
 .sticker {
   position: absolute;
-  top: 14px;
-  right: 14px;
+  bottom: 16px;
+  left: 16px;
   background: #ffeb99;
   color: var(--ink);
   padding: 6px 10px;
@@ -345,7 +372,7 @@ body::before {
   font-weight: 600;
   font-family: 'Space Grotesk', sans-serif;
   box-shadow: 1px 2px 4px rgba(0,0,0,0.2);
-  transform: rotate(4deg);
+  transform: rotate(-4deg);
   cursor: text;
   max-width: 120px;
   min-width: 60px;
@@ -604,8 +631,10 @@ body::before {
   .soon-title { font-size: 20px; margin: 0 0 12px 0; }
   .soon-icon { width: 24px; height: 24px; }
   .logo-frame { padding: 10px; margin-bottom: 10px; border-radius: 9px; }
-  .sticker { top: 10px; right: 10px; font-size: 10px; padding: 4px 8px; }
-  .open-app-btn { bottom: 16px; right: 16px; padding: 5px 10px; font-size: 10px; }
+  .sticker { bottom: 12px; left: 12px; font-size: 10px; padding: 4px 8px; }
+  .open-app-btn { padding: 4px 10px; font-size: 10px; }
+  .unstack-btn { top: 10px; right: 10px; width: 22px; height: 22px; }
+  .unstack-btn svg { width: 12px; height: 12px; }
 }
 </style>
 </head>
@@ -638,32 +667,46 @@ body::before {
 </header>
 
 <div class="table" id="table">
-  <article class="card card-red card-inmersion" data-app="inmersion" data-title="Innmersión" data-url="https://artefactos-de-marcos.github.io/visor_360/" data-color="#c8312b" tabindex="0" role="button" aria-label="Innmersión, imágenes 360 enriquecidas">
+  <article class="card card-red card-inmersion" data-app="inmersion" data-title="Inmersión" data-url="https://artefactos-de-marcos.github.io/visor_360/" data-color="#c8312b" tabindex="0" role="button" aria-label="Inmersión, imágenes 360 enriquecidas">
     <div class="card-inner">
       <div class="sticker" contenteditable="false"></div>
-      <div class="card-tag">Disponible</div>
+      <button class="unstack-btn" aria-label="Desapilar cartas" title="Desapilar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+        </svg>
+      </button>
+      <div class="card-top-row">
+        <div class="card-tag">Disponible</div>
+        <button class="open-app-btn" aria-label="Abrir aplicación Inmersión">
+          Abrir
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 17l9.2-9.2M17 17V7H7"></path>
+          </svg>
+        </button>
+      </div>
       <div class="card-body">
         <div class="logo-frame">
-          <img src="https://z-cdn-media.chatglm.cn/files/f82268e9-20f1-4d8e-bf3d-425e827cb818.png?auth_key=1884366257-20f796ad76384208ac852711dd26fe46-0-1bee5ca6c73a6931beb1afce57081f37" alt="Logo Innmersión">
+          <img src="https://z-cdn-media.chatglm.cn/files/f82268e9-20f1-4d8e-bf3d-425e827cb818.png?auth_key=1884366257-20f796ad76384208ac852711dd26fe46-0-1bee5ca6c73a6931beb1afce57081f37" alt="Logo Inmersión">
         </div>
         <div>
-          <div class="card-title">Innmersión</div>
+          <div class="card-title">Inmersión</div>
           <div class="card-subtitle">Imágenes 360° enriquecidas</div>
         </div>
       </div>
-      <button class="open-app-btn" aria-label="Abrir aplicación Innmersión">
-        Abrir
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M7 17l9.2-9.2M17 17V7H7"></path>
-        </svg>
-      </button>
     </div>
   </article>
 
   <article class="card card-amber card-soon" data-app="prox-1" data-title="Próximamente" data-url="" data-color="#e8a317" tabindex="0" role="button" aria-label="Próximamente, artefacto número uno">
     <div class="card-inner">
       <div class="sticker" contenteditable="false"></div>
-      <div class="card-tag">En preparación</div>
+      <button class="unstack-btn" aria-label="Desapilar cartas" title="Desapilar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+        </svg>
+      </button>
+      <div class="card-top-row">
+        <div class="card-tag">En preparación</div>
+      </div>
       <div class="card-body">
         <div class="soon-title">Próximamente</div>
         <svg class="soon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -677,7 +720,14 @@ body::before {
   <article class="card card-teal card-soon" data-app="prox-2" data-title="Próximamente" data-url="" data-color="#2d8b8b" tabindex="0" role="button" aria-label="Próximamente, artefacto número dos">
     <div class="card-inner">
       <div class="sticker" contenteditable="false"></div>
-      <div class="card-tag">En preparación</div>
+      <button class="unstack-btn" aria-label="Desapilar cartas" title="Desapilar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+        </svg>
+      </button>
+      <div class="card-top-row">
+        <div class="card-tag">En preparación</div>
+      </div>
       <div class="card-body">
         <div class="soon-title">Próximamente</div>
         <svg class="soon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -691,7 +741,14 @@ body::before {
   <article class="card card-navy card-soon" data-app="prox-3" data-title="Próximamente" data-url="" data-color="#1e3a5f" tabindex="0" role="button" aria-label="Próximamente, artefacto número tres">
     <div class="card-inner">
       <div class="sticker" contenteditable="false"></div>
-      <div class="card-tag">En preparación</div>
+      <button class="unstack-btn" aria-label="Desapilar cartas" title="Desapilar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+        </svg>
+      </button>
+      <div class="card-top-row">
+        <div class="card-tag">En preparación</div>
+      </div>
       <div class="card-body">
         <div class="soon-title">Próximamente</div>
         <svg class="soon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -891,12 +948,55 @@ cards.forEach(card => {
       e.stopPropagation();
       const url = card.dataset.url;
       if (url) {
-        showToast('Abriendo Innmersión...');
+        showToast('Abriendo Inmersión...');
         window.open(url, '_blank');
+      } else {
+        showToast('Próximamente');
       }
     });
   }
+
+  // Unstack Button Listener
+  const unstackBtn = card.querySelector('.unstack-btn');
+  if (unstackBtn) {
+    unstackBtn.addEventListener('pointerdown', e => e.stopPropagation());
+    unstackBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      unstackGroup(card);
+    });
+  }
 });
+
+function unstackGroup(card) {
+  const group = getStackGroup(card);
+  if (group.length <= 1) return;
+  
+  const cx = parseFloat(card.dataset.x);
+  const cy = parseFloat(card.dataset.y);
+  const tableRect = table.getBoundingClientRect();
+  const dist = window.innerWidth < 600 ? 100 : 140;
+  
+  group.forEach((c, i) => {
+    const angle = (i / group.length) * Math.PI * 2;
+    let newX = cx + Math.cos(angle) * dist;
+    let newY = cy + Math.sin(angle) * dist;
+    
+    newX = Math.max(0, Math.min(tableRect.width - cardW, newX));
+    newY = Math.max(0, Math.min(tableRect.height - cardH, newY));
+    
+    const rot = (Math.random() - 0.5) * 20; 
+    setCardPos(c, newX, newY, rot);
+  });
+  
+  if (selectedCard) {
+    selectedCard.classList.remove('selected');
+    selectedCard = null;
+    updateShareBar();
+  }
+  
+  updateStackUI();
+  showToast('Cartas desapiladas');
+}
 
 function makeEditable(el) {
   el.contentEditable = true;
@@ -1081,6 +1181,7 @@ function getStackGroup(card) {
 function updateStackUI() {
   cards.forEach(card => {
     const sticker = card.querySelector('.sticker');
+    const unstackBtn = card.querySelector('.unstack-btn');
     const group = getStackGroup(card);
     
     let topCard = card;
@@ -1092,8 +1193,10 @@ function updateStackUI() {
     
     if (group.length > 1 && card === topCard) {
       sticker.classList.add('show');
+      unstackBtn.classList.add('show');
     } else {
       sticker.classList.remove('show');
+      unstackBtn.classList.remove('show');
     }
   });
 }
