@@ -956,7 +956,8 @@ cards.forEach(card => {
       e.stopPropagation();
       const url = card.dataset.url;
       if (url) {
-        showToast('Abriendo Inmersión...');
+        const appName = card.dataset.title.split(' ')[0]; // Toma la primera palabra del título
+        showToast('Abriendo ' + appName + '...');
         window.open(url, '_blank');
       } else {
         showToast('Próximamente');
